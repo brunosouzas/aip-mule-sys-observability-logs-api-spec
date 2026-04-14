@@ -20,62 +20,123 @@ description: |
 types:
   DataClass:
     type: string
+    description: Data classification level assigned to the log record.
     enum: [ public, internal, confidential, restricted ]
   Severity:
     type: string
+    description: Canonical severity level for the log event.
     enum: [ TRACE, DEBUG, INFO, WARN, ERROR, FATAL ]
   SourcePlatform:
     type: string
+    description: Observability source platform from which the log was retrieved.
     enum: [ elk, splunk, datadog, azure-monitor ]
   AdapterHealth:
+    description: Health and latency indicators for a source adapter.
     type: object
+    additionalProperties: false
     properties:
-      source: SourcePlatform
+      source:
+        type: SourcePlatform
+        description: Source adapter identifier.
       status:
         type: string
+        description: Current availability status of the adapter.
         enum: [ available, degraded, unavailable ]
       latencyMsP95?:
         type: integer
+        description: P95 adapter response latency in milliseconds.
         minimum: 0
       notes?:
         type: string
+        description: Optional operational context about current adapter state.
   LogEntry:
+    description: Canonical normalised log record exposed by the System API.
     type: object
     additionalProperties: false
     properties:
-      logId: string
-      timestamp: datetime
-      sourcePlatform: SourcePlatform
-      serviceName: string
-      environment: string
-      severity: Severity
-      message: string
-      correlationId?: string
-      traceId?: string
-      spanId?: string
-      dataClass: DataClass
-      redactionApplied: boolean
+      logId:
+        type: string
+        description: Unique identifier of the log entry in canonical form.
+      timestamp:
+        type: datetime
+        description: UTC timestamp when the event occurred.
+      sourcePlatform:
+        type: SourcePlatform
+        description: Origin observability platform.
+      serviceName:
+        type: string
+        description: Service or application that emitted the event.
+      environment:
+        type: string
+        description: Runtime environment associated with the event.
+      severity:
+        type: Severity
+        description: Canonical severity classification.
+      message:
+        type: string
+        description: Canonical log message text.
+      correlationId?:
+        type: string
+        description: End-to-end correlation identifier when available.
+      traceId?:
+        type: string
+        description: Distributed tracing trace identifier when available.
+      spanId?:
+        type: string
+        description: Distributed tracing span identifier when available.
+      dataClass:
+        type: DataClass
+        description: Data classification assigned after policy evaluation.
+      redactionApplied:
+        type: boolean
+        description: Indicates whether sensitive data masking was applied.
       attributes?:
         type: object
-  LogSearchResponse:
+        description: Optional safe metadata associated with the canonical record.
+        additionalProperties: false
+        properties:
+          adapterHints?:
+            type: object
+            description: Optional non-sensitive adapter context.
+            additionalProperties: false
+  LogSearchResult:
+    description: Paginated result set for canonical log retrieval.
     type: object
     additionalProperties: false
     properties:
-      requestId: string
-      correlationId: string
+      requestId:
+        type: string
+        description: Unique identifier for the API request.
+      correlationId:
+        type: string
+        description: Correlation identifier for tracing across API layers.
       count:
         type: integer
+        description: Number of log entries returned in the current page.
         minimum: 0
-      partialResults: boolean
-      nextCursor?: string
-      entries: LogEntry[]
-  SourceHealthResponse:
+      partialResults:
+        type: boolean
+        description: Indicates whether one or more sources failed during retrieval.
+      nextCursor?:
+        type: string
+        description: Cursor token to fetch the next page.
+      entries:
+        type: LogEntry[]
+        description: Canonical log entries returned by the query.
+  SourceHealthResult:
+    description: Health status result for configured source adapters.
     type: object
     additionalProperties: false
     properties:
-      requestId: string
-      correlationId: string
-      sources: AdapterHealth[]
+      requestId:
+        type: string
+        description: Unique identifier for the health request.
+      correlationId:
+        type: string
+        description: Correlation identifier for operational traceability.
+      sources:
+        type: AdapterHealth[]
+        description: Health summary for each configured source adapter.
 
 /logs:
   get:
@@ -97,12 +158,15 @@ types:
         required: false
       serviceName:
         type: string
+        description: Filter by emitting service or application name.
         required: false
       environment:
         type: string
+        description: Filter by runtime environment.
         required: false
       severity:
         type: Severity[]
+        description: Filter by one or more canonical severity levels.
         required: false
       containsText:
         description: Case-insensitive message search term.
@@ -110,9 +174,11 @@ types:
         required: false
       correlationId:
         type: string
+        description: Filter by correlation identifier.
         required: false
       cursor:
         type: string
+        description: Cursor token to retrieve the next page of results.
         required: false
       sourceHealthRequired:
         description: If true, include degraded source details for partial result conditions.
@@ -130,7 +196,7 @@ types:
             description: content-type default to use
         body:
           application/json:
-            type: LogSearchResponse
+            type: LogSearchResult
             example: !include examples/get-logs-response-200.raml
 
 /sources/health:
@@ -149,7 +215,7 @@ types:
             description: content-type default to use
         body:
           application/json:
-            type: SourceHealthResponse
+            type: SourceHealthResult
             example: !include examples/get-sources-health-response-200.raml
 
 /health-check:
