@@ -142,7 +142,7 @@ types:
   get:
     displayName: Get Logs
     description: Retrieve canonical log entries from one or many observability sources.
-    is: [ core-lib.errorResponse, core-lib.pageable ]
+    is: [ core-lib.pageable ]
     queryParameters:
       startTime:
         description: Inclusive UTC start timestamp.
@@ -198,12 +198,99 @@ types:
           application/json:
             type: LogSearchResult
             example: !include examples/get-logs-response-200.raml
+      400:
+        description: bad request
+        headers:
+          Content-Type:
+            required: false
+            enum: [application/json]
+            default: application/json
+            description: content-type default to use
+        body:
+          application/json:
+            type: core-lib.error
+      401:
+        description: unauthorized
+        headers:
+          Content-Type:
+            required: false
+            enum: [application/json]
+            default: application/json
+            description: content-type default to use
+        body:
+          application/json:
+            type: core-lib.error
+      403:
+        description: forbidden
+        headers:
+          Content-Type:
+            required: false
+            enum: [application/json]
+            default: application/json
+            description: content-type default to use
+        body:
+          application/json:
+            type: core-lib.error
+      404:
+        description: not found
+        headers:
+          Content-Type:
+            required: false
+            enum: [application/json]
+            default: application/json
+            description: content-type default to use
+        body:
+          application/json:
+            type: core-lib.error
+      405:
+        description: method not allowed
+        headers:
+          Content-Type:
+            required: false
+            enum: [application/json]
+            default: application/json
+            description: content-type default to use
+        body:
+          application/json:
+            type: core-lib.error
+      406:
+        description: not acceptable
+        headers:
+          Content-Type:
+            required: false
+            enum: [application/json]
+            default: application/json
+            description: content-type default to use
+        body:
+          application/json:
+            type: core-lib.error
+      415:
+        description: unsupported media type
+        headers:
+          Content-Type:
+            required: false
+            enum: [application/json]
+            default: application/json
+            description: content-type default to use
+        body:
+          application/json:
+            type: core-lib.error
+      500:
+        description: internal server error
+        headers:
+          Content-Type:
+            required: false
+            enum: [application/json]
+            default: application/json
+            description: content-type default to use
+        body:
+          application/json:
+            type: core-lib.error
 
 /sources/health:
   get:
     displayName: Get Source Health
     description: Return current health and latency indicators for configured source adapters.
-    is: [ core-lib.errorResponse ]
     responses:
       200:
         description: success response
@@ -217,6 +304,94 @@ types:
           application/json:
             type: SourceHealthResult
             example: !include examples/get-sources-health-response-200.raml
+      400:
+        description: bad request
+        headers:
+          Content-Type:
+            required: false
+            enum: [application/json]
+            default: application/json
+            description: content-type default to use
+        body:
+          application/json:
+            type: core-lib.error
+      401:
+        description: unauthorized
+        headers:
+          Content-Type:
+            required: false
+            enum: [application/json]
+            default: application/json
+            description: content-type default to use
+        body:
+          application/json:
+            type: core-lib.error
+      403:
+        description: forbidden
+        headers:
+          Content-Type:
+            required: false
+            enum: [application/json]
+            default: application/json
+            description: content-type default to use
+        body:
+          application/json:
+            type: core-lib.error
+      404:
+        description: not found
+        headers:
+          Content-Type:
+            required: false
+            enum: [application/json]
+            default: application/json
+            description: content-type default to use
+        body:
+          application/json:
+            type: core-lib.error
+      405:
+        description: method not allowed
+        headers:
+          Content-Type:
+            required: false
+            enum: [application/json]
+            default: application/json
+            description: content-type default to use
+        body:
+          application/json:
+            type: core-lib.error
+      406:
+        description: not acceptable
+        headers:
+          Content-Type:
+            required: false
+            enum: [application/json]
+            default: application/json
+            description: content-type default to use
+        body:
+          application/json:
+            type: core-lib.error
+      415:
+        description: unsupported media type
+        headers:
+          Content-Type:
+            required: false
+            enum: [application/json]
+            default: application/json
+            description: content-type default to use
+        body:
+          application/json:
+            type: core-lib.error
+      500:
+        description: internal server error
+        headers:
+          Content-Type:
+            required: false
+            enum: [application/json]
+            default: application/json
+            description: content-type default to use
+        body:
+          application/json:
+            type: core-lib.error
 
 /health-check:
   /alive:
