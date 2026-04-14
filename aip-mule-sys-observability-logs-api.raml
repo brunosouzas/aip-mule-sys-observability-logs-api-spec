@@ -1,0 +1,140 @@
+#%RAML 1.0
+title: AIP Mule System Observability Logs API
+version: v1
+baseUri: /api/{version}
+mediaType: application/json
+protocols: [ HTTPS ]
+documentation:
+  - !include documentation.raml
+
+uses:
+  core-lib: exchange_modules/f29c19f9-a3b0-4a09-8da3-92b76caaac43/mule-utility-common-fragment/1.0.0/mule-utility-common-fragment.raml
+
+securedBy:
+  - core-lib.token
+
+description: |
+  Draft canonical System API contract for retrieving normalised logs from
+  enterprise observability platforms while abstracting vendor-specific payloads.
+
+types:
+  DataClass:
+    type: string
+    enum: [ public, internal, confidential, restricted ]
+  Severity:
+    type: string
+    enum: [ TRACE, DEBUG, INFO, WARN, ERROR, FATAL ]
+  SourcePlatform:
+    type: string
+    enum: [ elk, splunk, datadog, azure-monitor ]
+  AdapterHealth:
+    type: object
+    properties:
+      source: SourcePlatform
+      status:
+        type: string
+        enum: [ available, degraded, unavailable ]
+      latencyMsP95?:
+        type: integer
+        minimum: 0
+      notes?:
+        type: string
+  LogEntry:
+    type: object
+    additionalProperties: false
+    properties:
+      logId: string
+      timestamp: datetime
+      sourcePlatform: SourcePlatform
+      serviceName: string
+      environment: string
+      severity: Severity
+      message: string
+      correlationId?: string
+      traceId?: string
+      spanId?: string
+      dataClass: DataClass
+      redactionApplied: boolean
+      attributes?:
+        type: object
+  LogSearchResponse:
+    type: object
+    additionalProperties: false
+    properties:
+      requestId: string
+      correlationId: string
+      count:
+        type: integer
+        minimum: 0
+      partialResults: boolean
+      nextCursor?: string
+      entries: LogEntry[]
+  SourceHealthResponse:
+    type: object
+    additionalProperties: false
+    properties:
+      requestId: string
+      correlationId: string
+      sources: AdapterHealth[]
+
+/logs:
+  get:
+    description: Retrieve canonical log entries from one or many observability sources.
+    is: [ core-lib.pageable ]
+    queryParameters:
+      startTime:
+        description: Inclusive UTC start timestamp.
+        type: datetime
+        required: true
+      endTime:
+        description: Exclusive UTC end timestamp.
+        type: datetime
+        required: true
+      source:
+        description: Optional source filter. Omit to query all enabled sources.
+        type: SourcePlatform
+        required: false
+      serviceName:
+        type: string
+        required: false
+      environment:
+        type: string
+        required: false
+      severity:
+        type: Severity[]
+        required: false
+      containsText:
+        description: Case-insensitive message search term.
+        type: string
+        required: false
+      correlationId:
+        type: string
+        required: false
+      cursor:
+        type: string
+        required: false
+      sourceHealthRequired:
+        description: If true, include degraded source details for partial result conditions.
+        type: boolean
+        required: false
+        default: true
+    responses:
+      200:
+        body:
+          application/json:
+            type: LogSearchResponse
+
+/sources/health:
+  get:
+    description: Return current health and latency indicators for configured source adapters.
+    responses:
+      200:
+        body:
+          application/json:
+            type: SourceHealthResponse
+
+/health-check:
+  /alive:
+    type: core-lib.healthCheckAlive
+  /ready:
+    type: core-lib.healthCheckReady

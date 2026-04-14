@@ -1,0 +1,30 @@
+{
+  "main": "aip-mule-sys-observability-logs-api.raml",
+  "name": "aip-mule-sys-observability-logs-api-spec",
+  "classifier": "raml",
+  "tags": [
+    "system-api",
+    "observability",
+    "logs"
+  ],
+  "dependencies": [
+    {
+      "groupId": "f29c19f9-a3b0-4a09-8da3-92b76caaac43",
+      "assetId": "mule-utility-common-fragment",
+      "version": "1.0.0"
+    },
+    {
+      "groupId": "68ef9520-24e9-4cf2-b2f5-620025690913",
+      "assetId": "anypoint-best-practices",
+      "version": "1.6.3",
+      "scope": "validation"
+    }
+  ],
+  "groupId": "f29c19f9-a3b0-4a09-8da3-92b76caaac43",
+  "assetId": "aip-mule-sys-observability-logs-api-spec",
+  "version": "1.0.0",
+  "apiVersion": "v1",
+  "originalFormatVersion": "1.0",
+  "descriptorVersion": "1.0.0",
+  "organizationId": "f29c19f9-a3b0-4a09-8da3-92b76caaac43"
+}
