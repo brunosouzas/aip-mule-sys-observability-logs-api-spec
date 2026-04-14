@@ -1,0 +1,39 @@
+#%RAML 1.0 NamedExample
+{
+  "requestId": "9e3de64d-f74b-4d8c-b8d7-48e57ac5ec43",
+  "correlationId": "3bc0d8e6-5c1c-4a2f-b494-12e5b6d7778d",
+  "count": 2,
+  "partialResults": false,
+  "nextCursor": "eyJvZmZzZXQiOjIwMH0=",
+  "entries": [
+    {
+      "logId": "elk-001",
+      "timestamp": "2026-04-14T10:15:30Z",
+      "sourcePlatform": "elk",
+      "serviceName": "orders-api",
+      "environment": "prod",
+      "severity": "ERROR",
+      "message": "Timeout while calling payment gateway",
+      "correlationId": "corr-8f0c6f9b",
+      "traceId": "trace-42a7",
+      "spanId": "span-101",
+      "dataClass": "confidential",
+      "redactionApplied": true,
+      "attributes": {
+        "region": "eu-west-1",
+        "team": "payments"
+      }
+    },
+    {
+      "logId": "splunk-002",
+      "timestamp": "2026-04-14T10:16:04Z",
+      "sourcePlatform": "splunk",
+      "serviceName": "orders-api",
+      "environment": "prod",
+      "severity": "WARN",
+      "message": "Dependency latency above threshold",
+      "dataClass": "internal",
+      "redactionApplied": false
+    }
+  ]
+}

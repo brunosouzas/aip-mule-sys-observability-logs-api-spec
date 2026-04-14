@@ -1,0 +1,28 @@
+#%RAML 1.0 NamedExample
+{
+  "requestId": "a9dc2f2a-8f7c-4f17-bdb2-f72ce2a17ce2",
+  "correlationId": "98ec8407-5084-49f0-8a45-283f4e430fa9",
+  "sources": [
+    {
+      "source": "elk",
+      "status": "available",
+      "latencyMsP95": 320
+    },
+    {
+      "source": "splunk",
+      "status": "degraded",
+      "latencyMsP95": 1240,
+      "notes": "Rate limit thresholds reached"
+    },
+    {
+      "source": "datadog",
+      "status": "available",
+      "latencyMsP95": 410
+    },
+    {
+      "source": "azure-monitor",
+      "status": "available",
+      "latencyMsP95": 530
+    }
+  ]
+}
