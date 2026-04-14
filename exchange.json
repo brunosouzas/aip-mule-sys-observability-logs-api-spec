@@ -2,11 +2,7 @@
   "main": "aip-mule-sys-observability-logs-api.raml",
   "name": "aip-mule-sys-observability-logs-api-spec",
   "classifier": "raml",
-  "tags": [
-    "system-api",
-    "observability",
-    "logs"
-  ],
+  "tags": [],
   "dependencies": [
     {
       "groupId": "f29c19f9-a3b0-4a09-8da3-92b76caaac43",
